@@ -1,6 +1,6 @@
 # Image and text retrieval system based on Milvus
 
-This project is based on a paper **[Composing Text and Image for Image Retrieval - An Empirical Odyssey](https://arxiv.org/abs/1812.07119)**，The project is an image retrieval task in which an input query is specified as an image and a modified text description of the image is used for image retrieval
+This project is based on the paper **[Composing Text and Image for Image Retrieval - An Empirical Odyssey](https://arxiv.org/abs/1812.07119)**. In this project, we will build an image and text retrieval system which uses modified description text to query and retrieve images.
 
 ## Prerequisite
 
@@ -12,20 +12,20 @@ This project is based on a paper **[Composing Text and Image for Image Retrieval
 
 ## Data preparation
 
-Download the dataset from this [external website](https://drive.google.com/file/d/1wPqMw-HKmXUG2qTgYBiTNUnjz83hA2tY/view?usp=sharing).
+Download dataset from this [external website](https://drive.google.com/file/d/1wPqMw-HKmXUG2qTgYBiTNUnjz83hA2tY/view?usp=sharing).
 
-Make sure the dataset include these files: `<dataset_path>/css_toy_dataset_novel2_small.dup.npy` `<dataset_path>/images/*.png`
+Make sure the dataset includes following files: `<dataset_path>/css_toy_dataset_novel2_small.dup.npy` `<dataset_path>/images/*.png`
 
-## Run model with
+## Run TIRG model
 
-First, the TIRG model needs to be cloned:
+First, clone the TIRG model:
 
 ```
 cd tirg
 git clone https://github.com/google/tirg.git
 ```
 
-Then you need to install the Python environment:
+Then install the Python environment:
 
 ```
 pip install -r requirement
@@ -42,14 +42,14 @@ python main.py --dataset=css3d --dataset_path=./CSSDataset --num_iters=160000 \
   --model=tirg_lastconv --loss=soft_triplet --comment=css3d_tirgconv
 ```
 
-If you don’t want to run the training model and the test model separately, we can run the baseline model directly：
+If you don’t want to run the training and testing model separately, run the baseline model directly：
 
 ```
 python main.py --dataset=css3d --dataset_path=./CSSDataset --num_iters=160000 \
   --model=concat --loss=soft_triplet --comment=css3d_concat
 ```
 
-All log files will be saved at `./runs/<timestamp><comment>`. Monitor with tensorboard (training loss, training retrieval performance, testing retrieval performance):
+All log files will be saved at `./runs/<timestamp><comment>`. Use tensorboard to monitor the following benchmarks:training loss, retrieval performance of training, retrieval performance of testing:
 
 ```
 tensorboard --logdir ./runs/ --port 8888
@@ -70,8 +70,8 @@ Before running the script, please modify the parameters in **webserver/src/commo
 | MYSQL_DB     | Mysql datebase name       | mysql           |
 | MILVUS_TABLE | default table name        | milvus_k        |
 
-Please modify the parameters of Milvus and MySQL based on your environment.
-Before executing this code, you need to put the vector **img.npy** file for the target image under the **tirg/css** path
+Please modify the parameters of Milvus and MySQL according to your environment.
+Before executing this code, you need to move the target image vector **img.npy** file under the **tirg/css** path
 ```
 $ cd ..
 $ python insert_milvus.py ./tirg/css
@@ -79,7 +79,7 @@ $ python insert_milvus.py ./tirg/css
 
 ## Run webserver
 
-Start Image-Text retrieval system service.
+Start the image-text retrieval system.
 
 ```
 $ python main.py
@@ -92,4 +92,4 @@ INFO:     Application startup complete.
 INFO:     Uvicorn running on http://192.168.1.58:7000 (Press CTRL+C to quit)
 ```
 
-> You can get the API by typing http://127.0.0.1:7000/docs into your browser.
+> Type http://127.0.0.1:7000/docs into your browser to get the APIs.
